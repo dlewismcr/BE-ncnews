@@ -27,20 +27,39 @@ const getCommentsByArticleId = (req, res, next) => {
 };
 
 const postCommentByArticleId = (req, res, next) => {
-  console.log("postCommentByArticle" + req.params);
+  // console.log("postCommentByArticle", req.params);
   const { article_id } = req.params;
   Comment.create({
     body: req.body.body,
     belongs_to: article_id,
     created_by: req.body.created_by
-  });
+  })
+    .then(comment => {
+      res.status(201).send({ comment });
+    })
+    .catch(next);
+};
+
+const putArticleById = (req, res, next) => {
+  const { article_id } = req.params;
+  const { vote } = req.query;
+  let num = 0;
+  if (vote === "up") num = 1;
+  if (vote === "down") num = -1;
+
+  // {new:true} shows the updated article rather than the original
+  Article.findByIdAndUpdate(article_id, { $inc: { votes: num } }, { new: true })
+    .then(article => {
+      res.status(200).send({ article });
+      // msg thank you for voting
+    })
+    .catch(next);
 };
 
 module.exports = {
   getAllArticles,
   getArticleById,
   getCommentsByArticleId,
-  postCommentByArticleId
+  postCommentByArticleId,
+  putArticleById
 };
-
-// postCommentByArticleId not working
