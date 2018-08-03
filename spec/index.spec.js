@@ -115,18 +115,28 @@ describe("/api", () => {
           );
         });
     });
-    it("GET /articles/:article_id/comments", () => {
-      return request;
-      const article_id = articleDocs[3]._id
-        .get(`/api/articles/:${article_id}/comments`)
-        .expect(200)
+
+    it("POST /api/articles/:article_id/comments", () => {
+      const article_id = articleDocs[3]._id;
+      const newComment = {
+        body: "Test new catspiracy comment",
+        belongs_to: article_id.toString(),
+        created_by: userDocs[1]._id.toString()
+      };
+      return request
+        .post(`/api/articles/${article_id}/comments`)
+        .send(newComment)
+        .expect(201)
         .then(res => {
-          console.log(res.body);
-          expect(res.body).to.have.all.keys("comments");
-          expect(res.body.comments.length).to.equal(2);
-          expect(res.body.comments[1].body).to.equal(
-            "I am 100% sure that we're not completely sure."
-          );
+          expect(res.body).to.have.all.keys("comment");
+          expect(res.body.comment).to.be.an("object");
+          expect(res.body.comment.body).to.equal(newComment.body);
+          expect(res.body.comment.belongs_to).to.equal(newComment.belongs_to);
+          expect(res.body.comment.created_by).to.equal(newComment.created_by);
+          return request.get(`/api/articles/${article_id}/comments`);
+        })
+        .then(res => {
+          expect(res.body.comment.length).to.equal(3);
         });
     });
     it("POST /api/articles/:article_id/comments invalid article_id", () => {
