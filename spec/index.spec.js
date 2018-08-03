@@ -68,32 +68,167 @@ describe("/api", () => {
           expect(res.body.articles.length).to.equal(3);
         });
     });
-    describe("/articles", () => {
-      it("GET /articles", () => {
-        return request
-          .get("/api/articles")
-          .expect(200)
-          .then(res => {
-            expect(res.body).to.have.all.keys("articles");
-            expect(res.body.articles.length).to.equal(4);
-            expect(res.body.articles[3].created_by).to.equal(
-              userDocs[1]._id.toString()
-            );
-          });
-      });
-      it("GET /articles/:article_id", () => {
-        return request;
-        const article_id = articleDocs[3]._id
-          .get(`/api/articles/:${article_id}`)
-          .expect(200)
-          .then(res => {
-            expect(res.body).to.have.all.keys("articles");
-            expect(res.body.articles.length).to.equal(1);
-            expect(res.body.articles[0].title).to.equal(
-              "UNCOVERED: catspiracy to bring down democracy"
-            );
-          });
-      });
+  });
+  describe("/articles", () => {
+    it("GET /articles", () => {
+      return request
+        .get("/api/articles")
+        .expect(200)
+        .then(res => {
+          expect(res.body).to.have.all.keys("articles");
+          expect(res.body.articles.length).to.equal(4);
+          expect(res.body.articles[3].created_by).to.equal(
+            userDocs[1]._id.toString()
+          );
+        });
+    });
+    it("GET /articles/:article_id", () => {
+      return request;
+      const article_id = articleDocs[3]._id
+        .get(`/api/articles/:${article_id}`)
+        .expect(200)
+        .then(res => {
+          expect(res.body).to.have.all.keys("articles");
+          expect(res.body.articles.length).to.equal(1);
+          expect(res.body.articles[0].title).to.equal(
+            "UNCOVERED: catspiracy to bring down democracy"
+          );
+        });
+    });
+    it("GET /articles/:article_id invalid id", () => {
+      return request;
+      const article_id = wrongId
+        .get(`/api/articles/:${article_id}`)
+        .expect(404);
+    });
+    it("GET /articles/:article_id/comments", () => {
+      return request;
+      const article_id = articleDocs[3]._id
+        .get(`/api/articles/:${article_id}/comments`)
+        .expect(200)
+        .then(res => {
+          console.log(res.body);
+          expect(res.body).to.have.all.keys("comments");
+          expect(res.body.comments.length).to.equal(2);
+          expect(res.body.comments[1].body).to.equal(
+            "I am 100% sure that we're not completely sure."
+          );
+        });
+    });
+    it("GET /articles/:article_id/comments", () => {
+      return request;
+      const article_id = articleDocs[3]._id
+        .get(`/api/articles/:${article_id}/comments`)
+        .expect(200)
+        .then(res => {
+          console.log(res.body);
+          expect(res.body).to.have.all.keys("comments");
+          expect(res.body.comments.length).to.equal(2);
+          expect(res.body.comments[1].body).to.equal(
+            "I am 100% sure that we're not completely sure."
+          );
+        });
+    });
+    it("POST /api/articles/:article_id/comments invalid article_id", () => {
+      const article_id = wrongId;
+      const newComment = {
+        body: "Test new catspiracy comment",
+        belongs_to: article_id.toString(),
+        created_by: userDocs[1]._id.toString()
+      };
+      return request
+        .post(`/api/articles/${article_id}/comments`)
+        .send(newComment)
+        .expect(404);
+    });
+    it("PUT /api/articles/:article_id changes vote up", () => {
+      const article_id = articleDocs[3]._id;
+      return request
+        .put(`/api/articles/${article_id}?vote=up`)
+        .expect(200)
+        .then(res => {
+          expect(res.body).to.have.all.keys("article");
+          expect(res.body.article.votes).to.equal(1);
+        });
+    });
+    it("PUT /api/articles/:article_id changes vote down", () => {
+      const article_id = articleDocs[3]._id;
+      return request
+        .put(`/api/articles/${article_id}?vote=down`)
+        .expect(200)
+        .then(res => {
+          expect(res.body).to.have.all.keys("article");
+          expect(res.body.article.votes).to.equal(-1);
+        });
+    });
+    it("PUT /api/articles/:article_id changes vote down invalid article_id", () => {
+      const article_id = wrongId;
+      return request.put(`/api/articles/${article_id}?vote=down`).expect(404);
+    });
+  });
+  describe("/comments", () => {
+    it("PUT /api/comments/:comment_id changes vote up", () => {
+      const comment_id = commentDocs[0]._id;
+      return request
+        .put(`/api/comments/${comment_id}?vote=up`)
+        .expect(200)
+        .then(res => {
+          expect(res.body).to.have.all.keys("comment");
+          expect(res.body.comment.votes).to.equal(8);
+        });
+    });
+    it("PUT /api/comments/:comment_id changes vote down", () => {
+      const comment_id = commentDocs[1]._id;
+      return request
+        .put(`/api/comments/${comment_id}?vote=down`)
+        .expect(200)
+        .then(res => {
+          expect(res.body).to.have.all.keys("comment");
+          expect(res.body.comment.votes).to.equal(18);
+        });
+    });
+    it("PUT /api/comments/:comment_id invalid comment_id", () => {
+      const comment_id = wrongId;
+      return request.put(`/api/comments/${comment_id}?vote=down`).expect(404);
+    });
+    it("DELETE /api/comments/:comment_id", () => {
+      const comment_id = commentDocs[1]._id;
+      return request
+        .delete(`/api/comments/${comment_id}`)
+        .expect(200)
+        .then(() => {
+          return request.get("/api/comments");
+        })
+        .then(res => {
+          expect(res.body.comments.length).to.equal(7);
+        });
+    });
+    it("DELETE /api/comments/:comment_id invalid comment_id", () => {
+      const comment_id = wrongId;
+      return request.delete(`/api/comments/${comment_id}`).expect(404);
+    });
+  });
+  describe("/users", () => {
+    it("GET /users/:username", () => {
+      const username = userDocs[1].username.toString();
+      return request
+        .get(`/api/users/${username}`)
+        .expect(200)
+        .then(res => {
+          expect(res.body).to.have.all.keys("user");
+          expect(res.body.user.length).to.equal(1);
+          expect(res.body.user[0].username).to.equal(username);
+        });
+    });
+    it("GET /users/:username invalid username", () => {
+      const username = "invalid";
+      return request
+        .get(`/api/users/${username}`)
+        .expect(200)
+        .then(res => {
+          expect(res.body).to.have.all.keys("user");
+          expect(res.body.user.length).to.equal(0);
+        });
     });
   });
 });

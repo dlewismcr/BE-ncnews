@@ -1,5 +1,13 @@
 const { Comment } = require("../models");
 
+const getAllComments = (req, res, next) => {
+  Comment.find()
+    .then(comments => {
+      res.status(200).send({ comments });
+    })
+    .catch(next);
+};
+
 const putCommentById = (req, res, next) => {
   const { comment_id } = req.params;
   const { vote } = req.query;
@@ -26,6 +34,7 @@ const deleteCommentById = (req, res, next) => {
 };
 
 module.exports = {
+  getAllComments,
   putCommentById,
   deleteCommentById
 };
