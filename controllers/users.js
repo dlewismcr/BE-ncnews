@@ -4,7 +4,9 @@ const getUserByUsername = (req, res, next) => {
   const { username } = req.params;
   User.find({ username: username })
     .then(user => {
-      res.status(200).send({ user });
+      user.length !== 0
+        ? res.status(200).send({ user })
+        : next({ status: 404, msg: "404: User not found" });
     })
     .catch(next);
 };

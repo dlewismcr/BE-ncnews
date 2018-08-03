@@ -21,7 +21,7 @@ describe("/api", () => {
     return mongoose.disconnect();
   });
   describe("/topics", () => {
-    it("GET /topics", () => {
+    it("GET /api/topics", () => {
       return request
         .get("/api/topics")
         .expect(200)
@@ -31,7 +31,7 @@ describe("/api", () => {
           expect(res.body.topics[1].slug).to.equal("cats");
         });
     });
-    it("GET /topics/:topic_slug/articles", () => {
+    it("GET /api/topics/:topic_slug/articles", () => {
       return request
         .get("/api/topics/cats/articles")
         .expect(200)
@@ -43,10 +43,10 @@ describe("/api", () => {
           );
         });
     });
-    it("GET /topics/:topic_slug/articles invalid topic", () => {
+    it("GET /api/topics/:topic_slug/articles invalid topic", () => {
       return request.get("/api/topics/bananas/articles").expect(404);
     });
-    it("POST /topics/:topic_slug/articles", () => {
+    it("POST /api/topics/:topic_slug/articles", () => {
       const newArticle = {
         title: "Test new article on cats",
         created_by: userDocs[1]._id.toString(),
@@ -70,7 +70,7 @@ describe("/api", () => {
     });
   });
   describe("/articles", () => {
-    it("GET /articles", () => {
+    it("GET /api/articles", () => {
       return request
         .get("/api/articles")
         .expect(200)
@@ -82,35 +82,32 @@ describe("/api", () => {
           );
         });
     });
-    it("GET /articles/:article_id", () => {
-      return request;
-      const article_id = articleDocs[3]._id
-        .get(`/api/articles/:${article_id}`)
+    it("GET /api/articles/:article_id", () => {
+      const article_id = articleDocs[3]._id;
+      return request
+        .get(`/api/articles/${article_id}`)
         .expect(200)
         .then(res => {
-          expect(res.body).to.have.all.keys("articles");
-          expect(res.body.articles.length).to.equal(1);
-          expect(res.body.articles[0].title).to.equal(
+          expect(res.body).to.have.all.keys("article");
+          expect(res.body.article.length).to.equal(1);
+          expect(res.body.article[0].title).to.equal(
             "UNCOVERED: catspiracy to bring down democracy"
           );
         });
     });
-    it("GET /articles/:article_id invalid id", () => {
-      return request;
-      const article_id = wrongId
-        .get(`/api/articles/:${article_id}`)
-        .expect(404);
+    it("GET /api/articles/:article_id invalid id", () => {
+      const article_id = wrongId;
+      return request.get(`/api/articles/${article_id}`).expect(404);
     });
-    it("GET /articles/:article_id/comments", () => {
-      return request;
-      const article_id = articleDocs[3]._id
-        .get(`/api/articles/:${article_id}/comments`)
+    it("GET /api/articles/:article_id/comments", () => {
+      const article_id = articleDocs[3]._id;
+      return request
+        .get(`/api/articles/${article_id}/comments`)
         .expect(200)
         .then(res => {
-          console.log(res.body);
-          expect(res.body).to.have.all.keys("comments");
-          expect(res.body.comments.length).to.equal(2);
-          expect(res.body.comments[1].body).to.equal(
+          expect(res.body).to.have.all.keys("comment");
+          expect(res.body.comment.length).to.equal(2);
+          expect(res.body.comment[1].body).to.equal(
             "I am 100% sure that we're not completely sure."
           );
         });
@@ -219,7 +216,7 @@ describe("/api", () => {
     });
   });
   describe("/users", () => {
-    it("GET /users/:username", () => {
+    it("GET /api/users/:username", () => {
       const username = userDocs[1].username.toString();
       return request
         .get(`/api/users/${username}`)
@@ -230,15 +227,9 @@ describe("/api", () => {
           expect(res.body.user[0].username).to.equal(username);
         });
     });
-    it("GET /users/:username invalid username", () => {
+    it("GET /api/users/:username invalid username", () => {
       const username = "invalid";
-      return request
-        .get(`/api/users/${username}`)
-        .expect(200)
-        .then(res => {
-          expect(res.body).to.have.all.keys("user");
-          expect(res.body.user.length).to.equal(0);
-        });
+      return request.get(`/api/users/${username}`).expect(404);
     });
   });
 });
