@@ -12,6 +12,7 @@ const getArticleById = (req, res, next) => {
   const { article_id } = req.params;
   Article.find({ _id: article_id })
     .then(article => {
+      // article ? res.status(200).send([article]) : next({ status: 404, msg: 'article not found' })
       res.status(200).send({ article });
     })
     .catch(next);
@@ -47,7 +48,6 @@ const putArticleById = (req, res, next) => {
   if (vote === "up") num = 1;
   if (vote === "down") num = -1;
 
-  // {new:true} shows the updated article rather than the original
   Article.findByIdAndUpdate(article_id, { $inc: { votes: num } }, { new: true })
     .then(article => {
       res.status(200).send({ article });

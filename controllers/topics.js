@@ -9,17 +9,17 @@ const getAllTopics = (req, res, next) => {
 };
 
 const getArticlesByTopicSlug = (req, res, next) => {
-  console.log("getArticlesByTopicSlug", req.params);
   const { topic_slug } = req.params;
   Article.find({ belongs_to: topic_slug })
     .then(articles => {
-      res.status(200).send({ articles });
+      if (articles.length === 0) {
+        next({ status: 404, msg: "404: Topic not found" });
+      } else res.status(200).send({ articles });
     })
     .catch(next);
 };
 
 const addArticleByTopicSlug = (req, res, next) => {
-  console.log("addArticleByTopicSlug", req.params);
   const { topic_slug } = req.params;
   Article.create({
     title: req.body.title,

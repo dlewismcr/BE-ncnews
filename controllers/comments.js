@@ -7,7 +7,6 @@ const putCommentById = (req, res, next) => {
   if (vote === "up") num = 1;
   if (vote === "down") num = -1;
 
-  // {new:true} shows the updated comment rather than the original
   Comment.findByIdAndUpdate(comment_id, { $inc: { votes: num } }, { new: true })
     .then(comment => {
       res.status(200).send({ comment });

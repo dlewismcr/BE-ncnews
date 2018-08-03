@@ -11,12 +11,7 @@ app.use("/api", apiRouter);
 
 app.use((err, req, res, next) => {
   console.log(err);
-  if ((err.code = "23502"))
-    res
-      .status(400)
-      .send(
-        "**See app.js Example error** Bad request, missing field from POST request"
-      );
+  if ((err.code = 404)) res.status(404).send("404: Page not found");
   else next(err);
 });
 
