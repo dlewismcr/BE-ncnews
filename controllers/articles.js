@@ -31,7 +31,6 @@ const getCommentsByArticleId = (req, res, next) => {
 };
 
 const postCommentByArticleId = (req, res, next) => {
-  // console.log("postCommentByArticle", req.params);
   const { article_id } = req.params;
   Comment.create({
     body: req.body.body,
@@ -54,7 +53,6 @@ const putArticleById = (req, res, next) => {
   Article.findByIdAndUpdate(article_id, { $inc: { votes: num } }, { new: true })
     .then(article => {
       res.status(200).send({ article });
-      // msg thank you for voting
     })
     .catch(next);
 };
