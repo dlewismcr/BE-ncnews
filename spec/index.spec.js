@@ -44,7 +44,7 @@ describe("/api", () => {
         });
     });
     it("GET /api/topics/:topic_slug/articles invalid topic", () => {
-      return request.get("/api/topics/bananas/articles").expect(404);
+      return request.get("/api/topics/bananas/articles").expect(400);
     });
     it("POST /api/topics/:topic_slug/articles", () => {
       const newArticle = {

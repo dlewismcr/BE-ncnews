@@ -13,7 +13,7 @@ const getArticlesByTopicSlug = (req, res, next) => {
   Article.find({ belongs_to: topic_slug })
     .then(articles => {
       if (articles.length === 0) {
-        next({ status: 404, msg: "404: Topic not found" });
+        next({ status: 400, msg: "400: Topic not found" });
       } else res.status(200).send({ articles });
     })
     .catch(next);

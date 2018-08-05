@@ -12,10 +12,9 @@ const getArticleById = (req, res, next) => {
   const { article_id } = req.params;
   Article.find({ _id: article_id })
     .then(article => {
-      // console.log(article);
       article.length !== 0
         ? res.status(200).send({ article })
-        : next({ status: 404, msg: "article not found" });
+        : next({ status: 400, msg: "Article not found" });
     })
     .catch(next);
 };
@@ -24,7 +23,9 @@ const getCommentsByArticleId = (req, res, next) => {
   const { article_id } = req.params;
   Comment.find({ belongs_to: article_id })
     .then(comment => {
-      res.status(200).send({ comment });
+      comment !== null
+        ? res.status(200).send({ comment })
+        : next({ status: 400, msg: "400: Article not found" });
     })
     .catch(next);
 };
