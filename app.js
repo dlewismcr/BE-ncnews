@@ -2,7 +2,7 @@ const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
-const { DB_URL } = require("./config");
+const { DB_URL } = process.envDB_URL || require("./config");
 const apiRouter = require("./routes/api");
 
 app.use(bodyParser.json());
