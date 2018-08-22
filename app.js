@@ -2,9 +2,11 @@ const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
-const { DB_URL } = process.env || require("./config");
+const { DB_URL } = process.env.DB_URL ? process.env : require("./config");
 const apiRouter = require("./routes/api");
+const cors = require("cors");
 
+app.use(cors());
 app.use(bodyParser.json());
 app.use(express.static("public"));
 app.use("/api", apiRouter);
@@ -20,7 +22,7 @@ app.use((err, req, res, next) => {
 app.use((err, req, res, next) => {
   res.status(500).send("Internal Server Error");
 });
-
+console.log(DB_URL);
 mongoose
   .connect(
     DB_URL,
