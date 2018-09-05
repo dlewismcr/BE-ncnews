@@ -2,42 +2,30 @@ const { Article, Comment } = require("../models");
 
 const getAllArticles = (req, res, next) => {
   Article.find()
+    .populate("created_by")
     .then(articles => {
       res.status(200).send({ articles });
     })
     .catch(next);
 };
+// get comments & reduce to attach to articles
 
 const getArticleById = (req, res, next) => {
   const { article_id } = req.params;
   Article.find({ _id: article_id })
+    .populate("created_by")
     .then(article => {
-      if (article.length !== 0) {
-        //   async - returns udefined as is?
-        //   let comLen = Comment.find({ belongs_to: article_id }).length;
-        //   console.log(article, comLen);
-        //   article.comments = comLen;
-        res.status(200).send({ article });
-      }
-      next({ status: 400, msg: "Article not found" });
+      article.length !== 0
+        ? res.status(200).send({ article })
+        : next({ status: 400, msg: "Article not found" });
     })
     .catch(next);
 };
 
-// const getArticleById = (req, res, next) => {
-//   const { article_id } = req.params;
-//   Article.find({ _id: article_id })
-//     .then(article => {
-//       article.length !== 0
-//         ? res.status(200).send({ article })
-//         : next({ status: 400, msg: "Article not found" });
-//     })
-//     .catch(next);
-// };
-
 const getCommentsByArticleId = (req, res, next) => {
   const { article_id } = req.params;
   Comment.find({ belongs_to: article_id })
+    .populate("created_by")
     .then(comment => {
       comment !== null
         ? res.status(200).send({ comment })
