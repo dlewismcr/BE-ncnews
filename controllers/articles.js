@@ -8,18 +8,28 @@ const getAllArticles = (req, res, next) => {
     })
     .catch(next);
 };
-// get comments & reduce to attach to articles
 
 const getArticleById = (req, res, next) => {
   const { article_id } = req.params;
-  Article.find({ _id: article_id })
+  Article.findOne({ _id: article_id })
     .populate("created_by")
+    .lean()
     .then(article => {
-      article.length !== 0
-        ? res.status(200).send({ article })
-        : next({ status: 400, msg: "Article not found" });
+      return Promise.all([article, getCommentCount(article_id)]);
+    })
+    .then(([article, comCount]) => {
+      if (article.length !== 0) {
+        article.comment_count = comCount;
+        res.status(200).send({ article });
+      } else next({ status: 400, msg: "Article not found" });
     })
     .catch(next);
+};
+
+const getCommentCount = article_id => {
+  return Comment.find({ belongs_to: article_id }).then(comment => {
+    return comment.length;
+  });
 };
 
 const getCommentsByArticleId = (req, res, next) => {
