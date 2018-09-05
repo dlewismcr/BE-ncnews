@@ -9,6 +9,14 @@ const getAllArticles = (req, res, next) => {
     .catch(next);
 };
 
+// .then(articles => {
+//   return Promise(
+//     articles.map(article => {
+//       article.test = "test";
+//     })
+//   ).then(res.status(200).send({ articles }));
+// })
+
 const getArticleById = (req, res, next) => {
   const { article_id } = req.params;
   Article.findOne({ _id: article_id })

@@ -11,6 +11,7 @@ const getAllTopics = (req, res, next) => {
 const getArticlesByTopicSlug = (req, res, next) => {
   const { topic_slug } = req.params;
   Article.find({ belongs_to: topic_slug })
+    .populate("created_by")
     .then(articles => {
       if (articles.length === 0) {
         next({ status: 400, msg: "400: Topic not found" });
