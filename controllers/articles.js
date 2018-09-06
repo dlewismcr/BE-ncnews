@@ -1,21 +1,34 @@
 const { Article, Comment } = require("../models");
 
+// const getAllArticles = (req, res, next) => {
+//   Article.find()
+//     .populate("created_by")
+//     .then(articles => {
+//       res.status(200).send({ articles });
+//     })
+//     .catch(next);
+// };
 const getAllArticles = (req, res, next) => {
   Article.find()
     .populate("created_by")
+    .lean()
     .then(articles => {
-      res.status(200).send({ articles });
+      return Promise.all(
+        articles.map(article => {
+          return Promise.all([article, getCommentCount(article._id)]);
+        })
+      );
+    })
+    .then(articles => {
+      console.log(articles);
+      const commentArticles = articles.map(article => {
+        article[0].commentCount = article[1];
+        return article[0];
+      });
+      res.status(200).send({ articles: commentArticles });
     })
     .catch(next);
 };
-
-// .then(articles => {
-//   return Promise(
-//     articles.map(article => {
-//       article.test = "test";
-//     })
-//   ).then(res.status(200).send({ articles }));
-// })
 
 const getArticleById = (req, res, next) => {
   const { article_id } = req.params;
