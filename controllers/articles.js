@@ -70,7 +70,8 @@ const postCommentByArticleId = (req, res, next) => {
   Comment.create({
     body: req.body.body,
     belongs_to: article_id,
-    created_by: req.body.created_by
+    created_by: req.body.created_by,
+    created_at: Date.now()
   })
     .then(comment => {
       return Comment.findOne({ _id: comment._id }).populate("created_by");
