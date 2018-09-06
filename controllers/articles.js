@@ -73,6 +73,9 @@ const postCommentByArticleId = (req, res, next) => {
     created_by: req.body.created_by
   })
     .then(comment => {
+      return Comment.findOne({ _id: comment._id }).populate("created_by");
+    })
+    .then(comment => {
       res.status(201).send({ comment });
     })
     .catch(next);
