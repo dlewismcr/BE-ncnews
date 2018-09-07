@@ -3,4 +3,5 @@ node_modules/*
 .DS_Store
 config
 todo.txt
+toDoErrors.txt
 scratch.js

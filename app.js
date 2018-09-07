@@ -14,15 +14,18 @@ app.use("/api", apiRouter);
 app.use((err, req, res, next) => {
   if (err.status === 400)
     res.status(400).send({ msg: err.msg || "Bad request", err: err });
-  if (err.status === 404)
+  if (
+    err.status === 404 ||
+    err.name === "CastError" ||
+    err.name === "ValidationError"
+  )
     res.status(404).send({ msg: "Page not found", err: err });
   else next(err);
 });
 
 app.use((err, req, res, next) => {
-  res.status(500).send("Internal Server Error");
+  res.status(500).send({ msg: err.msg || "Internal Server Error" });
 });
-console.log(DB_URL);
 mongoose
   .connect(
     DB_URL,

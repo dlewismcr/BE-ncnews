@@ -11,7 +11,7 @@ describe("/api", () => {
     commentDocs,
     topicDocs,
     userDocs,
-    wrongId = mongoose.Types.ObjectId;
+    wrongId = "5b61c903dfc40353a6093b1";
   beforeEach(() => {
     return seedDb(data).then(docs => {
       [articleDocs, commentDocs, topicDocs, userDocs] = docs;
@@ -38,7 +38,7 @@ describe("/api", () => {
         .then(res => {
           expect(res.body).to.have.all.keys("articles");
           expect(res.body.articles.length).to.equal(2);
-          expect(res.body.articles[1].created_by).to.equal(
+          expect(res.body.articles[1].created_by._id).to.equal(
             userDocs[1]._id.toString()
           );
         });
@@ -62,7 +62,9 @@ describe("/api", () => {
           expect(res.body).to.have.all.keys("article");
           expect(res.body.article).to.be.an("object");
           expect(res.body.article.title).to.equal(newArticle.title);
-          expect(res.body.article.created_by).to.equal(newArticle.created_by);
+          expect(res.body.article.created_by._id).to.equal(
+            newArticle.created_by
+          );
           expect(res.body.article.body).to.equal(newArticle.body);
           return request.get("/api/topics/cats/articles");
         })
@@ -79,7 +81,7 @@ describe("/api", () => {
         .then(res => {
           expect(res.body).to.have.all.keys("articles");
           expect(res.body.articles.length).to.equal(4);
-          expect(res.body.articles[3].created_by).to.equal(
+          expect(res.body.articles[3].created_by._id).to.equal(
             userDocs[1]._id.toString()
           );
         });
@@ -91,8 +93,8 @@ describe("/api", () => {
         .expect(200)
         .then(res => {
           expect(res.body).to.have.all.keys("article");
-          expect(res.body.article.length).to.equal(1);
-          expect(res.body.article[0].title).to.equal(
+          expect(Object.keys(res.body).length).to.equal(1);
+          expect(res.body.article.title).to.equal(
             "UNCOVERED: catspiracy to bring down democracy"
           );
         });
@@ -131,7 +133,9 @@ describe("/api", () => {
           expect(res.body.comment).to.be.an("object");
           expect(res.body.comment.body).to.equal(newComment.body);
           expect(res.body.comment.belongs_to).to.equal(newComment.belongs_to);
-          expect(res.body.comment.created_by).to.equal(newComment.created_by);
+          expect(res.body.comment.created_by._id).to.equal(
+            newComment.created_by
+          );
           return request.get(`/api/articles/${article_id}/comments`);
         })
         .then(res => {
@@ -150,6 +154,7 @@ describe("/api", () => {
         .send(newComment)
         .expect(404);
     });
+
     it("PUT /api/articles/:article_id changes vote up", () => {
       const article_id = articleDocs[3]._id;
       return request

@@ -17,13 +17,6 @@ const getArticlesByTopicSlug = (req, res, next) => {
     .then(articles => {
       return Promise.all(
         articles.map(article => {
-          console.log(
-            articles.length,
-            " .map article: ",
-            article,
-            "id: ",
-            article._id
-          );
           return Promise.all([article, getCommentCount(article._id)]);
         })
       );
