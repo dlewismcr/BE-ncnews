@@ -29,6 +29,9 @@ const addArticleByTopicSlug = (req, res, next) => {
     created_by: req.body.created_by
   })
     .then(article => {
+      return Article.findOne({ _id: article._id }).populate("created_by");
+    })
+    .then(article => {
       res.status(201).send({ article });
     })
     .catch(next);
