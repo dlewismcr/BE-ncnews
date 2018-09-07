@@ -20,7 +20,6 @@ const getAllArticles = (req, res, next) => {
       );
     })
     .then(articles => {
-      console.log(articles);
       const commentArticles = articles.map(article => {
         article[0].commentCount = article[1];
         return article[0];
@@ -101,5 +100,6 @@ module.exports = {
   getArticleById,
   getCommentsByArticleId,
   postCommentByArticleId,
-  putArticleById
+  putArticleById,
+  getCommentCount
 };
