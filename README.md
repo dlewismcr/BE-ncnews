@@ -2,7 +2,7 @@
 
 https://dl-ncnews.herokuapp.com/
 
-**An API which will be used for the Northcoders News sprint**
+A RESTful API which will be used for the Northcoders News sprint.
 
 ## Getting Started
 
@@ -10,59 +10,123 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Prerequisites
 
-What things you need to install the software and how to install them
+You will need to install the following software:
 
+body-parser <br>
+cors <br>
+express <br>
+mongoose
 ```
-Give examples
+npm i body-parser
+npm i cors
+npm i express
+npm i mongoose
 ```
+### Use
 
-### Installing
+The end points are as follows:<br>
+<br>
 
-A step by step series of examples that tell you how to get a development env running
-
-Say what the step will be
-
+```http
+GET /api
 ```
-Give the example
-```
+Serves an HTML page with documentation for all the available endpoints
+<br>
+<br>
 
-And repeat
-
-```
-until finished
-```
-
-End with an example of getting some data out of the system or using it for a little demo
-
-## Running the tests
-
-Explain how to run the automated tests for this system
-
-### Break down into end to end tests
-
-Explain what these tests test and why
-
-```
-Give an example
+```http
+GET /api/topics
 ```
 
-### And coding style tests
+Get all the topics<br>
+<br>
 
-Explain what these tests test and why
 
+```http
+GET /api/topics/:topic_slug/articles
 ```
-Give an example
+
+Return all the articles for a certain topic, e.g: `/api/topics/football/articles`<br>
+<br>
+
+
+```http
+POST /api/topics/:topic_slug/articles
 ```
 
-## Deployment
+Add a new article to a topic. This route requires a JSON body with title and body key value pairs
+e.g: `{ "title": "new article", "body": "This is my new article content"}`<br>
+<br>
 
-Add additional notes about how to deploy this on a live system
 
-<!-- ## Built With
+```http
+GET /api/articles
+```
 
-- [Dropwizard](http://www.dropwizard.io/1.0.2/docs/) - The web framework used
-- [Maven](https://maven.apache.org/) - Dependency Management
-- [ROME](https://rometools.github.io/rome/) - Used to generate RSS Feeds  -->
+Returns all the articles<br>
+<br>
+
+
+```http
+GET /api/articles/:article_id
+```
+
+Get an individual article<br>
+<br>
+
+
+```http
+GET /api/articles/:article_id/comments
+```
+
+Get all the comments for a individual article<br>
+<br>
+
+
+```http
+POST /api/articles/:article_id/comments
+```
+
+Add a new comment to an article. This route requires a JSON body with body and created_by key value pairs
+e.g: `{"body": "This is my new comment", "created_by": <mongo id for a user>}`<br>
+<br>
+
+
+```http
+PUT /api/articles/:article_id
+```
+
+Increment or Decrement the votes of an article by one. This route requires a vote query of 'up' or 'down'
+e.g: `/api/articles/:article_id?vote=up`<br>
+<br>
+
+
+```http
+PUT /api/comments/:comment_id
+```
+
+Increment or Decrement the votes of a comment by one. This route requires a vote query of 'up' or 'down'
+e.g: `/api/comments/:comment_id?vote=down`<br>
+<br>
+
+
+```http
+DELETE /api/comments/:comment_id
+```
+
+Deletes a comment<br>
+<br>
+
+
+```http
+GET /api/users/:username
+```
+
+e.g: `/api/users/mitch123`
+
+Returns a JSON object with the profile data for the specified user.<br>
+<br>
+
 
 ## Authors
 
@@ -74,4 +138,4 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 
 ## Acknowledgments
 
-- All the wonderful nchelp'ers
+All the tutors at Northcoders, Manchester, UK.
