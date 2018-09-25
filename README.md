@@ -2,7 +2,7 @@
 
 https://dl-ncnews.herokuapp.com/
 
-A RESTful API which will be used for the Northcoders News sprint.
+A RESTful API which will be used for the Northcoders News project.
 
 ## Getting Started
 
