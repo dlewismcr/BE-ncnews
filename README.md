@@ -4,22 +4,6 @@ https://dl-ncnews.herokuapp.com/
 
 A RESTful API which will be used for the Northcoders News project.
 
-### Prerequisites
-
-You will need to install the following software:
-
-body-parser <br>
-cors <br>
-express <br>
-mongoose
-
-```
-npm i body-parser
-npm i cors
-npm i express
-npm i mongoose
-```
-
 ### Use
 
 The end points are as follows:<br>
@@ -126,4 +110,4 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 
 ## Acknowledgments
 
-All the tutors at Northcoders, Manchester, UK.
+All of the tutors at Northcoders, Manchester, UK.
