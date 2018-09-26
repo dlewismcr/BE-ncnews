@@ -1,10 +1,80 @@
-# Northcoders News
+# Northcoders News Back End
 
+Northcoders News Back End is a RESTful API which is used for the Northcoders News project.
+
+It contains a database of all articles, comments, topics & users. All available endpoints are listed in the "Routes" section.
+
+It is hosted on: 
 https://dl-ncnews.herokuapp.com/
 
-A RESTful API which will be used for the Northcoders News project.
+## Getting Started
 
-### Use
+Clone this repository:
+```
+$ git clone https://github.com/dlewismcr/BE-ncnews
+```
+## Installation
+```
+$ npm install
+```
+Will install the following packages:
+<br>
+<br>
+Dependencies:
+- body-parser: ^1.18.3
+- cors: ^2.8.4
+- express: ^4.16.3
+- mongoose: ^5.2.6
+<br>
+Dev Dependencies:
+<br>
+- chai: ^4.1.2
+- mocha: ^5.0.5
+- nodemon: ^1.17.4
+- supertest: ^3.0.0
+
+You will also need a config folder containing the following index.js file:
+```js
+const NODE_ENV = process.env.NODE_ENV || "development";
+
+const config = {
+  development: {
+    DB_URL: "mongodb://localhost:27017/northcoders_news",
+    PORT: 9091
+  },
+  test: {
+    DB_URL: "mongodb://localhost:27017/northcoders_news_test",
+    PORT: 9090
+  },
+  production: {
+    DB_URL: "Insert your mlab url"
+  }
+};
+
+module.exports = config[NODE_ENV];
+```
+### Seeding the database
+Install MongoDB:
+```
+$ mongo --version
+```
+Start mongoDB (in a seperate terminal):
+```
+$ mongod
+```
+Seed the database:
+```
+$ npm run seed:dev
+```
+Start the server:
+```
+$ npm run dev
+```
+You will now be able to open the app in your browser (or Postman) using the following url:
+```
+localhost:9090/api
+```
+## Routes
 
 The end points are as follows:<br>
 <br>
@@ -99,6 +169,13 @@ e.g: `/api/users/mitch123`
 
 Returns a JSON object with the profile data for the specified user.<br>
 <br>
+
+## Testing
+
+Run the following command in your terminal:
+```
+$ npm t
+```
 
 ## Authors
 
